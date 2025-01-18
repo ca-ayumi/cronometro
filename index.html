@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      margin: 0;
+      background-color: #f5f5f5;
+    }
+    .timer-container {
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: conic-gradient(#00bcd4 0% 75%, #e0e0e0 75% 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+    .timer-face {
+      width: 85%;
+      height: 85%;
+      border-radius: 50%;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .timer-face h1 {
+      margin: 0;
+      font-size: 2rem;
+      color: #00bcd4;
+    }
+    .timer-face p {
+      margin: 0;
+      font-size: 1rem;
+      color: #757575;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+    .controls button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: #fff;
+      background-color: #00bcd4;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .controls button:hover {
+      background-color: #008c9e;
+    }
+  </style>
+</head>
+<body>
+  <div class="timer-container">
+    <div class="timer-face">
+      <h1 id="timer">25:00</h1>
+      <p>Minutes Left</p>
+    </div>
+  </div>
+  <div class="controls">
+    <button id="pause-btn">Pause</button>
+    <button id="resume-btn" disabled>Resume</button>
+    <button id="restart-btn">Restart</button>
+  </div>
+
+  <script>
+    const startMinutes = 25;
+    let time = startMinutes * 60;
+    let timerInterval;
+
+    const timerElement = document.getElementById('timer');
+    const pauseButton = document.getElementById('pause-btn');
+    const resumeButton = document.getElementById('resume-btn');
+    const restartButton = document.getElementById('restart-btn');
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(time / 60);
+      const seconds = time % 60;
+      timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        if (time > 0) {
+          time--;
+          updateTimerDisplay();
+        } else {
+          clearInterval(timerInterval);
+          timerElement.textContent = "00:00";
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+      pauseButton.disabled = true;
+      resumeButton.disabled = false;
+    }
+
+    function resumeTimer() {
+      startTimer();
+      pauseButton.disabled = false;
+      resumeButton.disabled = true;
+    }
+
+    function restartTimer() {
+      clearInterval(timerInterval);
+      time = startMinutes * 60;
+      updateTimerDisplay();
+      startTimer();
+      pauseButton.disabled = false;
+      resumeButton.disabled = true;
+    }
+
+    pauseButton.addEventListener('click', pauseTimer);
+    resumeButton.addEventListener('click', resumeTimer);
+    restartButton.addEventListener('click', restartTimer);
+
+    updateTimerDisplay();
+    startTimer();
+  </script>
+</body>
+</html>
