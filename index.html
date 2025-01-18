@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cronômetro Personalizado</title>
+  <title>Cronômetro com Dropdown Personalizado</title>
   <style>
     body {
       font-family: "Arial", sans-serif;
@@ -27,7 +27,60 @@
       font-size: 1.8rem;
       font-weight: bold;
       color: #4a6fa5;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .dropdown-container {
+      position: relative;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .dropdown-selected {
+      background-color: #ffffff;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 10px 15px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1rem;
+    }
+    .dropdown-options {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+      display: none;
+      flex-direction: column;
+    }
+    .dropdown-options.active {
+      display: flex;
+    }
+    .dropdown-option {
+      padding: 10px 15px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    .dropdown-option:hover {
+      background-color: #f0f0f0;
+    }
+    .dropdown-option.selected {
+      font-weight: bold;
+      color: #4a6fa5;
+    }
+    .dropdown-arrow {
+      font-size: 0.8rem;
+      transition: transform 0.3s;
+    }
+    .dropdown-arrow.open {
+      transform: rotate(180deg);
     }
     .timer-display {
       font-size: 3.5rem;
@@ -60,36 +113,20 @@
       background-color: #cccccc;
       cursor: not-allowed;
     }
-    .timer-options {
-      margin-bottom: 20px;
-      text-align: left;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .timer-options label {
-      font-size: 1rem;
-      font-weight: bold;
-      color: #333;
-    }
-    .timer-options select {
-      font-size: 1rem;
-      padding: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
   </style>
 </head>
 <body>
   <div class="timer-container">
     <div class="timer-header" id="timer-mode">Pomodoro</div>
-    <div class="timer-options">
-      <label for="mode-select">Escolha o modo:</label>
-      <select id="mode-select">
-        <option value="pomodoro">Pomodoro (25 minutos)</option>
-        <option value="ultradian">Ciclos Ultradianos (90 minutos)</option>
-      </select>
+    <div class="dropdown-container">
+      <div class="dropdown-selected">
+        Pomodoro (25 minutos)
+        <span class="dropdown-arrow">&#9660;</span>
+      </div>
+      <div class="dropdown-options">
+        <div class="dropdown-option selected" data-value="pomodoro">Pomodoro (25 minutos)</div>
+        <div class="dropdown-option" data-value="ultradian">Ciclos Ultradianos (90 minutos)</div>
+      </div>
     </div>
     <div class="timer-display" id="timer-display">25:00</div>
     <div class="controls">
@@ -102,16 +139,19 @@
   <script>
     const timerDisplay = document.getElementById("timer-display");
     const timerMode = document.getElementById("timer-mode");
-    const modeSelect = document.getElementById("mode-select");
+    const dropdownSelected = document.querySelector('.dropdown-selected');
+    const dropdownOptions = document.querySelector('.dropdown-options');
+    const dropdownArrow = document.querySelector('.dropdown-arrow');
+    const options = document.querySelectorAll('.dropdown-option');
     const startBtn = document.getElementById("start-btn");
     const pauseBtn = document.getElementById("pause-btn");
     const resetBtn = document.getElementById("reset-btn");
 
     let timerInterval;
-    let time = 25 * 60; // Tempo padrão em segundos para Pomodoro
+    let time = 25 * 60; // Tempo inicial padrão
     let isRunning = false;
-    let isFocusTime = true; // Fase de foco ou pausa
-    let pomodoroCount = 0;
+    let isFocusTime = true; // Indica se está no modo de foco
+    let selectedValue = 'pomodoro'; // Valor padrão do dropdown
 
     // Atualiza o cronômetro na tela
     function updateTimerDisplay() {
@@ -120,6 +160,23 @@
       timerDisplay.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
         .toString()
         .padStart(2, "0")}`;
+    }
+
+    // Alterna entre foco e pausa
+    function handlePhaseEnd() {
+      if (isFocusTime) {
+        // Finaliza foco -> inicia pausa
+        isFocusTime = false;
+        timerMode.textContent = selectedValue === 'pomodoro' ? "Pausa Curta" : "Pausa Ultradiana";
+        time = selectedValue === 'pomodoro' ? 5 * 60 : 20 * 60; // 5 ou 20 minutos
+      } else {
+        // Finaliza pausa -> inicia foco
+        isFocusTime = true;
+        timerMode.textContent = selectedValue === 'pomodoro' ? "Pomodoro" : "Ciclos Ultradianos";
+        time = selectedValue === 'pomodoro' ? 25 * 60 : 90 * 60; // 25 ou 90 minutos
+      }
+      updateTimerDisplay();
+      startTimer(); // Reinicia automaticamente
     }
 
     // Inicia o cronômetro
@@ -133,7 +190,7 @@
           } else {
             clearInterval(timerInterval);
             isRunning = false;
-            handlePhaseEnd();
+            handlePhaseEnd(); // Alterna entre foco e pausa
           }
         }, 1000);
         startBtn.textContent = "Rodando...";
@@ -154,62 +211,37 @@
       clearInterval(timerInterval);
       isRunning = false;
       isFocusTime = true;
-      pomodoroCount = 0;
-      updateMode();
+      time = selectedValue === 'pomodoro' ? 25 * 60 : 90 * 60; // Reseta para foco inicial
+      timerMode.textContent = selectedValue === 'pomodoro' ? "Pomodoro" : "Ciclos Ultradianos";
+      updateTimerDisplay();
       startBtn.textContent = "Iniciar";
       pauseBtn.disabled = true;
     }
 
-    // Lida com o fim de uma fase (foco ou pausa)
-    function handlePhaseEnd() {
-      if (isFocusTime) {
-        // Fim da fase de foco
-        isFocusTime = false;
-        if (modeSelect.value === "pomodoro") {
-          pomodoroCount++;
-          if (pomodoroCount % 4 === 0) {
-            time = 15 * 60; // Pausa longa (15 minutos)
-            timerMode.textContent = "Pausa Longa";
-          } else {
-            time = 5 * 60; // Pausa curta (5 minutos)
-            timerMode.textContent = "Pausa Curta";
-          }
-        } else if (modeSelect.value === "ultradian") {
-          time = 20 * 60; // Pausa Ultradiana (20 minutos)
-          timerMode.textContent = "Pausa Ultradiana";
-        }
-      } else {
-        // Fim da pausa
-        isFocusTime = true;
-        if (modeSelect.value === "pomodoro") {
-          time = 25 * 60; // Foco Pomodoro (25 minutos)
-          timerMode.textContent = "Pomodoro";
-        } else if (modeSelect.value === "ultradian") {
-          time = 90 * 60; // Foco Ultradiano (90 minutos)
-          timerMode.textContent = "Ciclos Ultradianos";
-        }
-      }
-      updateTimerDisplay();
-      startTimer(); // Inicia automaticamente a próxima fase
-    }
+    // Atualiza o modo selecionado
+    options.forEach(option => {
+      option.addEventListener('click', () => {
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        dropdownSelected.firstChild.textContent = option.textContent;
+        selectedValue = option.getAttribute('data-value');
+        resetTimer(); // Reseta o cronômetro ao mudar o modo
+      });
+    });
 
-    // Atualiza o modo escolhido
-    function updateMode() {
-      if (modeSelect.value === "pomodoro") {
-        time = 25 * 60;
-        timerMode.textContent = "Pomodoro";
-      } else if (modeSelect.value === "ultradian") {
-        time = 90 * 60;
-        timerMode.textContent = "Ciclos Ultradianos";
-      }
-      updateTimerDisplay();
-    }
+    // Abre/fecha o dropdown
+    dropdownSelected.addEventListener('click', () => {
+      dropdownOptions.classList.toggle('active');
+      dropdownArrow.classList.toggle('open');
+    });
 
-    // Listeners para os botões e seleção de modo
-    modeSelect.addEventListener("change", updateMode);
-    startBtn.addEventListener("click", startTimer);
-    pauseBtn.addEventListener("click", pauseTimer);
-    resetBtn.addEventListener("click", resetTimer);
+    // Fecha o dropdown ao clicar fora
+    document.addEventListener('click', (event) => {
+      if (!event.target.closest('.dropdown-container')) {
+        dropdownOptions.classList.remove('active');
+        dropdownArrow.classList.remove('open');
+      }
+    });
 
     // Inicializa o cronômetro
     updateTimerDisplay();
