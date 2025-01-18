@@ -15,32 +15,32 @@
       height: 100vh;
       margin: 0;
       background: transparent; /* Fundo transparente */
-      color: #191919; /* Cor do texto padrão */
-      transition: color 0.3s;
+      color: #191919; /* Preto como cor padrão */
     }
 
     .timer-container {
       text-align: center;
-      color: #191919; /* Texto principal */
       width: 253px;
       padding: 20px;
-      transition: color 0.3s;
     }
 
     .timer-header {
       font-size: 1.5rem;
       font-weight: normal; /* Fonte menos bold */
       margin-bottom: 10px;
-      color: #2c3e50; /* Azul-escuro */
+      color: inherit; /* Texto sempre herdado */
     }
 
     .timer-display {
-      font-size: 3rem;
+      font-size: 3.5rem;
       margin: 15px 0;
-      font-weight: normal; /* Fonte menos bold */
+      font-weight: 700; /* Fonte mais bold */
       font-family: "Space Mono", monospace;
-      color: #4b6fa5; /* Azul principal */
-      transition: color 0.3s;
+      color: #fff; /* Texto branco */
+      text-shadow: 
+        0px 0px 3px #191919,  /* Glow sutil preto */
+        0px 0px 1px #191919, 
+        0px 2px 1px rgba(0, 0, 0, 0.8); /* Sombra abaixo para dar um efeito 3D */
     }
 
     .mode-buttons {
@@ -51,26 +51,29 @@
     }
 
     .mode-buttons button {
-      background-color: transparent; /* Botão com fundo transparente */
-      color: #4b6fa5; /* Azul principal */
-      border: 1px solid #4b6fa5;
+      background-color: #fff; /* Fundo branco */
+      color: #191919; /* Texto preto */
+      border: 1px solid #191919; /* Borda preta */
       border-radius: 20px;
       padding: 8px 10px;
       cursor: pointer;
       font-size: 0.9rem;
       font-weight: normal; /* Texto leve */
+      box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Leve sombra */
       transition: all 0.3s ease-in-out;
     }
 
     .mode-buttons button:hover {
-      background-color: #4b6fa5;
-      color: #ffffff;
+      background-color: #191919; /* Fundo preto no hover */
+      color: #fff; /* Texto branco no hover */
+      border: 1px solid #fff; /* Borda branca */
     }
 
     .mode-buttons button.active {
-      background-color: #4b6fa5;
-      color: #ffffff;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      background-color: #191919; /* Fundo preto para o botão ativo */
+      color: #fff; /* Texto branco */
+      border: 1px solid #fff; /* Borda branca */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra mais forte */
     }
 
     .controls {
@@ -81,8 +84,8 @@
     }
 
     .controls button {
-      background-color: #4b6fa5;
-      color: #ffffff;
+      background-color: #191919; /* Preto */
+      color: #fff; /* Branco */
       border: none;
       border-radius: 8px;
       padding: 8px 10px;
@@ -90,46 +93,21 @@
       font-size: 0.9rem;
       font-weight: normal; /* Texto leve */
       transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+      box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2); /* Leve sombra */
     }
 
     .controls button:hover {
-      background-color: #2c3e50; /* Azul-escuro */
+      background-color: #fff; /* Branco no hover */
+      color: #000; /* Preto no hover */
+      border: 1px solid #000; /* Adiciona borda preta */
       transform: scale(1.1);
     }
 
     .controls button:disabled {
-      background-color: #cccccc;
+      background-color: #ccc; /* Cinza claro */
+      color: #666; /* Cinza escuro */
       cursor: not-allowed;
-    }
-
-    /* Estilo para modo escuro */
-    @media (prefers-color-scheme: dark) {
-      body {
-        color: #ececec; /* Texto claro */
-      }
-
-      .timer-display {
-        color: #4b6fa5; /* Azul no modo escuro */
-      }
-
-      .mode-buttons button {
-        color: #4b6fa5;
-        border: 1px solid #4b6fa5;
-      }
-
-      .mode-buttons button:hover {
-        background-color: #4b6fa5;
-        color: #ffffff;
-      }
-
-      .controls button {
-        background-color: #4b6fa5;
-      }
-
-      .controls button:hover {
-        background-color: #ececec;
-        color: #2c3e50;
-      }
+      border: none;
     }
   </style>
 </head>
