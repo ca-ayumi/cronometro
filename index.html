@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cronômetro Moderno</title>
+  <!-- Importando a fonte Space Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: "Poppins", sans-serif;
@@ -12,87 +14,127 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #ffffff; 
-      color: #333;
+      background: transparent; /* Fundo transparente */
+      color: #191919; /* Cor do texto padrão */
+      transition: color 0.3s;
     }
+
     .timer-container {
-      background-color: #ffffff;
-      color: #333;
-      width: 253px; /* Ajustado para 253px */
-      border-radius: 15px;
-      padding: 20px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       text-align: center;
-      position: relative;
+      color: #191919; /* Texto principal */
+      width: 253px;
+      padding: 20px;
+      transition: color 0.3s;
     }
+
     .timer-header {
-      font-size: 1.5rem; /* Ajustado para combinar com a nova largura */
-      font-weight: bold;
+      font-size: 1.5rem;
+      font-weight: normal; /* Fonte menos bold */
       margin-bottom: 10px;
-      color: #4a6fa5;
+      color: #2c3e50; /* Azul-escuro */
     }
+
+    .timer-display {
+      font-size: 3rem;
+      margin: 15px 0;
+      font-weight: normal; /* Fonte menos bold */
+      font-family: "Space Mono", monospace;
+      color: #4b6fa5; /* Azul principal */
+      transition: color 0.3s;
+    }
+
     .mode-buttons {
       display: flex;
       justify-content: center;
       gap: 10px;
-      margin-bottom: 15px; /* Margem reduzida */
+      margin-bottom: 15px;
     }
+
     .mode-buttons button {
-      background-color: #f5f5f5;
-      color: #4a6fa5;
-      border: none;
+      background-color: transparent; /* Botão com fundo transparente */
+      color: #4b6fa5; /* Azul principal */
+      border: 1px solid #4b6fa5;
       border-radius: 20px;
-      padding: 8px 10px; /* Ajustado para caber no design reduzido */
+      padding: 8px 10px;
       cursor: pointer;
-      font-size: 0.9rem; /* Fonte reduzida */
-      font-weight: bold;
+      font-size: 0.9rem;
+      font-weight: normal; /* Texto leve */
       transition: all 0.3s ease-in-out;
     }
+
     .mode-buttons button:hover {
-      background-color: #4a6fa5;
-      color: #fff;
+      background-color: #4b6fa5;
+      color: #ffffff;
     }
+
     .mode-buttons button.active {
-      background-color: #4a6fa5;
-      color: #fff;
+      background-color: #4b6fa5;
+      color: #ffffff;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
-    .timer-display {
-      font-size: 3rem; /* Ajustado para manter o foco no número */
-      margin: 15px 0; /* Margem reduzida */
-      font-weight: bold;
-      color: #4a6fa5;
-    }
+
     .controls {
       display: flex;
       justify-content: center;
-      gap: 10px; /* Gap reduzido */
-      margin-top: 15px; /* Margem reduzida */
+      gap: 10px;
+      margin-top: 15px;
     }
+
     .controls button {
-      background-color: #4a6fa5;
+      background-color: #4b6fa5;
       color: #ffffff;
       border: none;
       border-radius: 8px;
-      padding: 8px 10px; /* Ajustado para caber no design */
+      padding: 8px 10px;
       cursor: pointer;
-      font-size: 0.9rem; /* Fonte reduzida */
-      font-weight: bold;
+      font-size: 0.9rem;
+      font-weight: normal; /* Texto leve */
       transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
     }
+
     .controls button:hover {
-      background-color: #3a5d85;
+      background-color: #2c3e50; /* Azul-escuro */
       transform: scale(1.1);
     }
+
     .controls button:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
+    }
+
+    /* Estilo para modo escuro */
+    @media (prefers-color-scheme: dark) {
+      body {
+        color: #ececec; /* Texto claro */
+      }
+
+      .timer-display {
+        color: #4b6fa5; /* Azul no modo escuro */
+      }
+
+      .mode-buttons button {
+        color: #4b6fa5;
+        border: 1px solid #4b6fa5;
+      }
+
+      .mode-buttons button:hover {
+        background-color: #4b6fa5;
+        color: #ffffff;
+      }
+
+      .controls button {
+        background-color: #4b6fa5;
+      }
+
+      .controls button:hover {
+        background-color: #ececec;
+        color: #2c3e50;
+      }
     }
   </style>
 </head>
 <body>
   <div class="timer-container">
-    <div class="timer-header">Cronômetro</div>
     <div class="mode-buttons">
       <button class="active" id="pomodoro-btn">Pomodoro</button>
       <button id="ultradian-btn">Ciclo Ultradiano</button>
